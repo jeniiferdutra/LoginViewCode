@@ -7,12 +7,24 @@
 
 import UIKit
 
+protocol RegisterScreenProtocol: AnyObject {
+    func actionBackButton()
+    func actionRegisterButton()
+}
+
 class RegisterScreen: UIView {
+    
+    weak private var delegate: RegisterScreenProtocol?
+    
+    func delegate(delegate: RegisterScreenProtocol?) {
+        self.delegate = delegate
+    }
     
     lazy var backButton: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setImage(UIImage(named: "back"), for: .normal)
+        btn.addTarget(self, action: #selector(tappedBackButton), for: .touchUpInside)
         return btn
     }()
     
@@ -43,7 +55,7 @@ class RegisterScreen: UIView {
         tf.autocorrectionType = .no
         tf.backgroundColor = .white
         tf.borderStyle = .roundedRect
-        tf.keyboardType = .emailAddress
+        tf.keyboardType = .default
         tf.placeholder = "Digite sua senha"
         tf.isSecureTextEntry = true
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -59,6 +71,7 @@ class RegisterScreen: UIView {
         btn.clipsToBounds = true
         btn.layer.cornerRadius = 7.5
         btn.backgroundColor = UIColor(red: 3/255, green: 58/255, blue: 51/255, alpha: 1.0)
+        btn.addTarget(self, action: #selector(tappedRegisterButton), for: .touchUpInside)
         return btn
     }()
     
@@ -79,6 +92,19 @@ class RegisterScreen: UIView {
     
     private func configBackground() {
         backgroundColor = UIColor(red: 24/255, green: 117/255, blue: 104/255, alpha: 1.0)
+    }
+    
+    public func configTextFieldsDelegate(delegate: UITextFieldDelegate) {
+        emailTextField.delegate = delegate
+        passwordTextField.delegate = delegate
+    }
+    
+    @objc private func tappedBackButton() {
+        delegate?.actionBackButton()
+    }
+    
+    @objc private func tappedRegisterButton() {
+        delegate?.actionRegisterButton()
     }
     
     required init?(coder: NSCoder) {
