@@ -7,7 +7,18 @@
 
 import UIKit
 
+protocol LoginScreenProtocol: AnyObject {
+    func actionLoginButton()
+    func actionRegisterButton()
+}
+
 class LoginScreen: UIView {
+    
+    private weak var delegate: LoginScreenProtocol?
+    
+    func delegate(delegate: LoginScreenProtocol?) { // funcao para configurar o delegate
+        self.delegate = delegate
+    }
 
     lazy var loginLabel: UILabel = { // lazy só é executado qnd chama. util para otimizar o uso de memória ou evitar cálculos desnecessários.
         let label = UILabel()
@@ -61,6 +72,7 @@ class LoginScreen: UIView {
         btn.clipsToBounds = true // arrendondar
         btn.layer.cornerRadius = 7.5 // raio de arredondamento das bordas do botão, criando cantos arredondados.
         btn.backgroundColor = UIColor(red: 3/255, green: 58/255, blue: 51/255, alpha: 1.0)
+        btn.addTarget(self, action: #selector(tappedLoginButton), for: .touchUpInside)
         return btn
     }()
     
@@ -70,6 +82,7 @@ class LoginScreen: UIView {
         btn.setTitle("Não tem conta? Cadastre-se", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         btn.setTitleColor(.white, for: .normal)
+        btn.addTarget(self, action: #selector(tappedRegisterButton), for: .touchUpInside)
         return btn
     }()
     
@@ -96,6 +109,14 @@ class LoginScreen: UIView {
     public func configTextFieldDelegate(delegate: UITextFieldDelegate) {
         emailTextField.delegate = delegate
         passwordTextField.delegate = delegate
+    }
+    
+    @objc private func tappedLoginButton() {
+        delegate?.actionLoginButton()
+    }
+    
+    @objc private func tappedRegisterButton() {
+        delegate?.actionRegisterButton()
     }
     
     required init?(coder: NSCoder) {

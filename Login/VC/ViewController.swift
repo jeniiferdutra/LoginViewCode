@@ -18,12 +18,26 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loginScreen?.delegate(delegate: self)
         loginScreen?.configTextFieldDelegate(delegate: self)
+        
     }
 
     override func viewWillAppear(_ animated: Bool) { // usado para esconder a barra de navegação assim que a tela está prestes a aparecer.
         self.navigationController?.setNavigationBarHidden(true, animated: false) // esconde a barra de navegação.
     }
+}
+
+extension ViewController: LoginScreenProtocol {
+    func actionLoginButton() {
+        print("deu certo LoginButton")
+    }
+    
+    func actionRegisterButton() {
+        print("Deu certo RegisterButton")
+    }
+    
+    
 }
 
 extension ViewController: UITextFieldDelegate {
