@@ -80,6 +80,7 @@ class RegisterScreen: UIView {
         configBackground()
         configSuperView()
         setupConstraints()
+        configButtonEnable(false)
     }
     
     private func configSuperView() {
@@ -105,6 +106,28 @@ class RegisterScreen: UIView {
     
     @objc private func tappedRegisterButton() {
         delegate?.actionRegisterButton()
+    }
+    
+    public func validaTextFields() {
+        
+        let email: String = emailTextField.text ?? ""
+        let password: String = passwordTextField.text ?? ""
+        
+        if !email.isEmpty && !password.isEmpty { // vai verificar se o email/senha nao estao vazios 
+            configButtonEnable(true)
+        } else {
+            configButtonEnable(false)
+        }
+    }
+    
+    public func configButtonEnable(_ enable: Bool) { // se o botao estar ou nao habilitado
+        if enable {
+            registerButton.setTitleColor(.white, for: .normal)
+            registerButton.isEnabled = true
+        } else { // caso a validacao nao tiver dados
+            registerButton.setTitleColor(.lightGray, for: .normal)
+            registerButton.isEnabled = false // impedindo o usuario de fazer o clique
+        }
     }
     
     required init?(coder: NSCoder) {

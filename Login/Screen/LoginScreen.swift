@@ -91,6 +91,7 @@ class LoginScreen: UIView {
         configBackground()
         configSuperView()
         setUpConstraints()
+        configButtonEnable(false) 
     }
     
     private func configBackground() {
@@ -117,6 +118,28 @@ class LoginScreen: UIView {
     
     @objc private func tappedRegisterButton() {
         delegate?.actionRegisterButton()
+    }
+    
+    public func validaTextFields() {
+        
+        let email: String = emailTextField.text ?? ""
+        let password: String = passwordTextField.text ?? ""
+        
+        if !email.isEmpty && !password.isEmpty {
+            configButtonEnable(true)
+        } else {
+            configButtonEnable(false)
+        }
+    }
+    
+    public func configButtonEnable(_ enable: Bool) {
+        if enable {
+            loginButton.setTitleColor(.white, for: .normal)
+            loginButton.isEnabled = true
+        } else {
+            loginButton.setTitleColor(.lightGray, for: .normal)
+            loginButton.isEnabled = false
+        }
     }
     
     required init?(coder: NSCoder) {
