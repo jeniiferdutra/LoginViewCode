@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseAuth
 
 class LoginVC: UIViewController {
     
     var loginScreen: LoginScreen?
+    var auth: Auth?
     
     override func loadView() { // responsavel pela criacao de uma view
         loginScreen = LoginScreen()
@@ -20,6 +23,7 @@ class LoginVC: UIViewController {
         super.viewDidLoad()
         loginScreen?.delegate(delegate: self)
         loginScreen?.configTextFieldDelegate(delegate: self)
+        auth = Auth.auth()
         
     }
 
@@ -30,11 +34,24 @@ class LoginVC: UIViewController {
 
 extension LoginVC: LoginScreenProtocol {
     func actionLoginButton() {
-        print("deu certo LoginButton")
+        guard let login = loginScreen else {return }
+        
+        auth?.createUser(withEmail: login.getEmail(), password: login.getPassword(), completion: { (usuario, error) in
+            
+            if error != nil {
+                print("Atençao! Dados incorretos, verifique e tente novamente.")
+            } else {
+                if usuario == nil {
+                    print("Tivemos um problema inesperado. Tente novamente mais tarde")
+                } else {
+                    print("Parabens! Usuario logado com sucesso!!!")
+                }
+            }
+        })
+
     }
     
     func actionRegisterButton() {
-        print("Deu certo RegisterButton")
         let vc: RegisterVC = RegisterVC()
         navigationController?.pushViewController(vc, animated: true)
     }
