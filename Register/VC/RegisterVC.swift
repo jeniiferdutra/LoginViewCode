@@ -12,8 +12,8 @@ import FirebaseAuth
 class RegisterVC: UIViewController {
     
     var registersScreen: RegisterScreen?
-    
     var auth:Auth?
+    var alert: Alert?
     
     override func loadView() {
         registersScreen = RegisterScreen()
@@ -25,6 +25,7 @@ class RegisterVC: UIViewController {
         registersScreen?.configTextFieldsDelegate(delegate: self)
         registersScreen?.delegate(delegate: self)
         auth = Auth.auth()
+        self.alert = Alert(controller: self)
     }
 }
 
@@ -42,8 +43,7 @@ extension RegisterVC: UITextFieldDelegate {
 
 extension RegisterVC: RegisterScreenProtocol {
     func actionBackButton() {
-        print("Back Button!!")
-        navigationController?.popViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func actionRegisterButton() {
@@ -53,12 +53,13 @@ extension RegisterVC: RegisterScreenProtocol {
         auth?.createUser(withEmail: register.getEmail(), password: register.getPassword(), completion: { (result, error) in
             
             if error != nil {
-                print("Erro ao cadastrar")
+                self.alert?.getAlert(titulo: "Atencao!", mensagem: "Erro ao cadastrar. Verifique os dados e tente novamente")
             } else {
-                print("Sucesso ao cadastrar")
+                self.alert?.getAlert(titulo: "Parabens", mensagem: "Usuario cadatrado com sucesso", completion:
+                    {
+                    self.navigationController?.popViewController(animated: true)
+                })
             }
         })
     }
-    
-    
 }

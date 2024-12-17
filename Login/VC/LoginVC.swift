@@ -13,6 +13,7 @@ class LoginVC: UIViewController {
     
     var loginScreen: LoginScreen?
     var auth: Auth?
+    var alert: Alert?
     
     override func loadView() { // responsavel pela criacao de uma view
         loginScreen = LoginScreen()
@@ -24,6 +25,7 @@ class LoginVC: UIViewController {
         loginScreen?.delegate(delegate: self)
         loginScreen?.configTextFieldDelegate(delegate: self)
         auth = Auth.auth()
+        self.alert = Alert(controller: self)
         
     }
 
@@ -36,15 +38,15 @@ extension LoginVC: LoginScreenProtocol {
     func actionLoginButton() {
         guard let login = loginScreen else {return }
         
-        auth?.createUser(withEmail: login.getEmail(), password: login.getPassword(), completion: { (usuario, error) in
+        auth?.signIn(withEmail: login.getEmail(), password: login.getPassword(), completion: { (usuario, error) in
             
             if error != nil {
-                print("Atençao! Dados incorretos, verifique e tente novamente.")
+                self.alert?.getAlert(titulo: "Atencao!", mensagem: "Dados incorretos, verifique e tente novamente")
             } else {
                 if usuario == nil {
-                    print("Tivemos um problema inesperado. Tente novamente mais tarde")
+                    self.alert?.getAlert(titulo: "Atencao!", mensagem: "Tivemos um erro inesperado. Tente novamente mais tarde")
                 } else {
-                    print("Parabens! Usuario logado com sucesso!!!")
+                    self.alert?.getAlert(titulo: "Parabens!", mensagem: "Usuario logado com sucesso!!!")
                 }
             }
         })
